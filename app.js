@@ -4,7 +4,9 @@ const products = [
   { id: 3, name: "Sri Venkateshwara Premium Statue", price: 16, description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", image: "images/1000110555.jpg" },
   { id: 4, name: "Lord Shiva(Mahadev) Bust", price: 13, description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", image: "images/1000109572.png" }
 ];
-
+function isLoggedIn() {
+    return localStorage.getItem("loggedInUser") !== null;
+}
 function getCart() { return JSON.parse(localStorage.getItem("cart") || "[]"); }
 function saveCart(cart) { localStorage.setItem("cart", JSON.stringify(cart)); }
 
@@ -13,17 +15,21 @@ function isLoggedIn() {
 }
 
 function addToCart(id) {
-  if (!isLoggedIn()) {
-    alert("Please login or sign up before adding products to cart.");
-    window.location.href = "login.html";
-    return;
-  }
 
-  const item = products.find(p => p.id === id);
-  const cart = getCart();
-  cart.push(item);
-  saveCart(cart);
-  alert("Added to cart");
+    if (!isLoggedIn()) {
+        alert("Please login before adding products to cart.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    const item = products.find(p => p.id === id);
+    const cart = getCart();
+
+    cart.push(item);
+
+    saveCart(cart);
+
+    alert("Added to cart");
 }
 
 function renderProducts() {
@@ -35,7 +41,9 @@ function renderProducts() {
       <h3>${p.name}</h3>
       <p>${p.description}</p>
       <strong>$${p.price}</strong>
-      <button onclick="addToCart(${p.id})">Add to Cart</button>
+      <button onclick="addToCart(${p.id})">
+    ${isLoggedIn() ? "Add to Cart" : "Login to Add"}
+</button>
     </div>`).join("");
 }
 
@@ -99,6 +107,34 @@ async function loadAdminOrders() {
     el.innerHTML = orders.map(o => `<div class="order-card"><h3>${o.customer_name} - $${o.total_amount}</h3><p>${o.phone} | ${o.email}</p><p>${o.delivery_address}</p><pre>${JSON.stringify(o.items, null, 2)}</pre><p>${o.notes || ""}</p></div>`).join("");
   } catch (err) { el.innerHTML = `<p class="error">${err.message}</p>`; }
 }
+const loginForm = document.getElementById("loginForm");
 
+if (loginForm) {
+  loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
+
+      // Save login locally
+      localStorage.setItem("loggedInUser", email);
+
+      alert("Login successful");
+
+      window.location.href = "products.html";
+
+    } catch (err) {
+      alert(err.message);
+    }
+  });
+}
 renderProducts();
 renderCart();
