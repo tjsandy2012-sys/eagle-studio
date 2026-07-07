@@ -1,8 +1,8 @@
 const products = [
-  { id: 1, name: "Lord Balaji Dashboard Idol", price: 15, description: "3D printed devotional idol for car dashboard.", image: "assets/images/placeholder.svg" },
-  { id: 2, name: "Lord Murugan Idol", price: 18, description: "Beautiful devotional idol for home decor.", image: "assets/images/placeholder.svg" },
-  { id: 3, name: "Return Gift Mini Idol", price: 8, description: "Bulk return gift option for functions.", image: "assets/images/placeholder.svg" },
-  { id: 4, name: "Custom 3D Print", price: 25, description: "Custom model based on your request.", image: "assets/images/placeholder.svg" }
+  { id: 1, name: "Lord Balaji Premium Dashboard Idol", price: $11, description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", image: "images/1000109054.png" },
+  { id: 2, name: "Lord Murugan Idol", price: $15, description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", image: "images/1000110560.png" },
+  { id: 3, name: "Sri Venkateshwara Premium Statue", price: $16, description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", image: "images/1000110555.png" },
+  { id: 4, name: "Lord Shiva(Mahadev) Bust", price: $13, description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", image: "assets/images/1000109572.png" }
 ];
 
 function getCart() { return JSON.parse(localStorage.getItem("cart") || "[]"); }
