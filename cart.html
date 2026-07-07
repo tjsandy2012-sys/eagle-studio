@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Cart | Eagle Studio</title><link rel="stylesheet" href="styles.css" /></head>
+<body>
+<header class="header"><div class="brand">🦅 Eagle Studio</div><nav><a href="index.html">Home</a><a href="products.html">Products</a><a href="cart.html">Cart</a><a href="login.html">Login</a><a href="admin.html">Admin</a></nav></header>
+<main class="container">
+  <h1>Your Cart</h1>
+  <div id="cartItems"></div>
+  <h2>Checkout</h2>
+  <p class="notice">Cash only. Payment will be collected separately.</p>
+  <form id="orderForm">
+    <input required id="customerName" placeholder="Customer name" />
+    <input required id="phone" placeholder="Phone number" />
+    <input required id="email" type="email" placeholder="Email" />
+    <textarea required id="address" placeholder="Delivery address"></textarea>
+    <textarea id="notes" placeholder="Notes/customization request"></textarea>
+    <button type="submit">Place Order</button>
+  </form>
+</main>
+<script src="supabase-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
