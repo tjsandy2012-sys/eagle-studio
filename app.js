@@ -8,7 +8,17 @@ const products = [
 function getCart() { return JSON.parse(localStorage.getItem("cart") || "[]"); }
 function saveCart(cart) { localStorage.setItem("cart", JSON.stringify(cart)); }
 
+function isLoggedIn() {
+  return localStorage.getItem("loggedInUser") !== null;
+}
+
 function addToCart(id) {
+  if (!isLoggedIn()) {
+    alert("Please login or sign up before adding products to cart.");
+    window.location.href = "login.html";
+    return;
+  }
+
   const item = products.find(p => p.id === id);
   const cart = getCart();
   cart.push(item);
