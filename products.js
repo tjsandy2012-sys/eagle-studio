@@ -1,7 +1,7 @@
 const products = [
     {
         id: 1, 
-        name: "Lord Balaji Premium Dashboard Idol",
+        name: "Lord Balaji Premium Idol",
         price: 11, 
         description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
         image: "images/1000109054.png" ,
@@ -22,13 +22,13 @@ const products = [
         stock:"Available"
     },
     {
-        id: 2, 
-        name: "Lord Murugan Idol", 
-        price: 15, 
+        id: 3, 
+        name: "Sri Venkateshwara Premium Statue", 
+        price: 16, 
         description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
-        image: "images/1000110560.jpg"
+        image: "images/1000110555.jpg" 
         material:"PLA",
-        size:"9 Inch",
+        size:"10 Inch",
         color:"Premium Jet Black",
         stock:"Available"
     },
