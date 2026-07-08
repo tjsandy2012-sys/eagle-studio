@@ -6,19 +6,41 @@ const products = [
         description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
         image: "images/1000109054.png" ,
         material:"PLA",
-        size:"10 inch",
+        size:"10 Inch",
         color:"Premium Jet Black",
         stock:"Available"
     },
     {
-        id:2,
-        name:"Lord Balaji Idol",
-        price:"$18",
-        image:"images/balaji.jpg",
-        description:"Premium devotional idol.",
+        id: 2, 
+        name: "Lord Murugan Idol", 
+        price: 15, 
+        description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
+        image: "images/1000110560.jpg"
         material:"PLA",
-        size:"Medium",
-        color:"Black",
+        size:"9 Inch",
+        color:"Premium Jet Black",
+        stock:"Available"
+    },
+    {
+        id: 2, 
+        name: "Lord Murugan Idol", 
+        price: 15, 
+        description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
+        image: "images/1000110560.jpg"
+        material:"PLA",
+        size:"9 Inch",
+        color:"Premium Jet Black",
+        stock:"Available"
+    },
+    {
+        id: 2, 
+        name: "Lord Murugan Idol", 
+        price: 15, 
+        description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
+        image: "images/1000110560.jpg"
+        material:"PLA",
+        size:"9 Inch",
+        color:"Premium Jet Black",
         stock:"Available"
     }
 ];
