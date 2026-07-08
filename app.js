@@ -49,12 +49,22 @@ function renderCart() {
   }
 
   el.innerHTML =
-    cart.map(item => `
+    cart.map((item, index) => `
       <div class="cart-row">
-        ${item.name} - $${item.price}
+        <span>${item.name} - $${item.price}</span>
+        <button onclick="removeFromCart(${index})">Remove</button>
       </div>
     `).join("") +
     `<h3>Total: $${total}</h3>`;
+}
+function removeFromCart(index) {
+  const cart = getCart();
+
+  cart.splice(index, 1);
+
+  saveCart(cart);
+
+  renderCart();
 }
 
 async function supabaseRequest(path, method = "GET", body = null) {
