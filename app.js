@@ -9,7 +9,33 @@ function getCart() {
 function saveCart(cart) {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
+function updateHeader() {
+  const nav = document.querySelector("header nav");
+  if (!nav) return;
 
+  const loggedInUser = localStorage.getItem("loggedInUser");
+
+  if (loggedInUser) {
+    const firstName = loggedInUser.split("@")[0];
+
+    nav.innerHTML = `
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="cart.html">Cart</a>
+      <span>Welcome, ${firstName}</span>
+      <a href="#" onclick="logoutUser()">Sign Out</a>
+      <a href="admin.html">Admin</a>
+    `;
+  }
+}
+
+function logoutUser() {
+  localStorage.removeItem("loggedInUser");
+  alert("Signed out successfully");
+  window.location.href = "login.html";
+}
+
+updateHeader();
 function renderCart() {
   const el = document.getElementById("cartItems");
   if (!el) return;
