@@ -15,42 +15,61 @@ function renderCart() {
   if (!el) return;
 
   const cart = getCart();
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
-  el.innerHTML = cart.length
-    ? cart.map(i => `<div class="cart-row">${i.name} - $${i.price}</div>`).join("") +
-      `<h3>Total: $${total}</h3>`
-    : "<p>Your cart is empty.</p>";
+  if (cart.length === 0) {
+    el.innerHTML = "<p>Your cart is empty.</p>";
+    return;
+  }
+
+  el.innerHTML =
+    cart.map(item => `
+      <div class="cart-row">
+        ${item.name} - $${item.price}
+      </div>
+    `).join("") +
+    `<h3>Total: $${total}</h3>`;
 }
 
 async function supabaseRequest(path, method = "GET", body = null) {
-  if (SUPABASE_URL.includes("PASTE_YOUR")) {
+  if (
+    typeof SUPABASE_URL === "undefined" ||
+    typeof SUPABASE_ANON_KEY === "undefined" ||
+    SUPABASE_URL.includes("PASTE_YOUR")
+  ) {
     throw new Error("Please update supabase-config.js with your Supabase URL and anon key.");
   }
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    method,
+    method: method,
     headers: {
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
       "Content-Type": "application/json",
-      Prefer: "return=representation"
+      "Prefer": "return=representation"
     },
     body: body ? JSON.stringify(body) : null
   });
 
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) {
+    throw new Error(await res.text());
+  }
+
   return res.json();
 }
 
 const orderForm = document.getElementById("orderForm");
 
 if (orderForm) {
-  orderForm.addEventListener("submit", async (e) => {
+  orderForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const cart = getCart();
-    if (!cart.length) return alert("Cart is empty");
+
+    if (cart.length === 0) {
+      alert("Cart is empty");
+      return;
+    }
 
     const order = {
       customer_name: document.getElementById("customerName").value,
@@ -59,7 +78,7 @@ if (orderForm) {
       delivery_address: document.getElementById("address").value,
       notes: document.getElementById("notes").value,
       items: cart,
-      total_amount: cart.reduce((sum, item) => sum + item.price, 0),
+      total_amount: cart.reduce((sum, item) => sum + Number(item.price), 0),
       payment_status: "Cash only - pending collection"
     };
 
@@ -67,7 +86,7 @@ if (orderForm) {
       await supabaseRequest("orders", "POST", order);
       localStorage.removeItem("cart");
       alert("Order placed successfully.");
-      location.href = "products.html";
+      window.location.href = "products.html";
     } catch (err) {
       alert("Order failed: " + err.message);
     }
@@ -75,32 +94,37 @@ if (orderForm) {
 }
 
 async function loadAdminOrders() {
-  const pass = document.getElementById("adminPassword").value;
-  if (pass !== ADMIN_PASSWORD) return alert("Wrong admin password");
+  const passwordInput = document.getElementById("adminPassword");
+  const adminOrders = document.getElementById("adminOrders");
 
-  const el = document.getElementById("adminOrders");
+  if (!passwordInput || !adminOrders) return;
+
+  if (passwordInput.value !== ADMIN_PASSWORD) {
+    alert("Wrong admin password");
+    return;
+  }
 
   try {
     const orders = await supabaseRequest("orders?select=*&order=created_at.desc");
 
-    el.innerHTML = orders.map(o => `
+    adminOrders.innerHTML = orders.map(order => `
       <div class="order-card">
-        <h3>${o.customer_name} - $${o.total_amount}</h3>
-        <p>${o.phone} | ${o.email}</p>
-        <p>${o.delivery_address}</p>
-        <pre>${JSON.stringify(o.items, null, 2)}</pre>
-        <p>${o.notes || ""}</p>
+        <h3>${order.customer_name} - $${order.total_amount}</h3>
+        <p>${order.phone} | ${order.email}</p>
+        <p>${order.delivery_address}</p>
+        <pre>${JSON.stringify(order.items, null, 2)}</pre>
+        <p>${order.notes || ""}</p>
       </div>
     `).join("");
   } catch (err) {
-    el.innerHTML = `<p class="error">${err.message}</p>`;
+    adminOrders.innerHTML = `<p class="error">${err.message}</p>`;
   }
 }
 
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
-  loginForm.addEventListener("submit", (e) => {
+  loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
     const email = document.getElementById("loginEmail").value;
