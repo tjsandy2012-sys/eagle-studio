@@ -33,13 +33,13 @@ const products = [
         stock:"Available"
     },
     {
-        id: 2, 
-        name: "Lord Murugan Idol", 
-        price: 15, 
+        id: 4, 
+        name: "Lord Shiva(Mahadev) Bust", 
+        price: 13, 
         description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
-        image: "images/1000110560.jpg"
+        image: "images/1000109572.png"
         material:"PLA",
-        size:"9 Inch",
+        size:"8 Inch",
         color:"Premium Jet Black",
         stock:"Available"
     }
