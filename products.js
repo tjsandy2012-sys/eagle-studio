@@ -1,13 +1,13 @@
 const products = [
     {
-        id:1,
-        name:"Lord Murugan Idol",
-        price:"$15",
-        image:"images/murugan.jpg",
-        description:"Beautiful devotional idol.",
+        id: 1, 
+        name: "Lord Balaji Premium Dashboard Idol",
+        price: 11, 
+        description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
+        image: "images/1000109054.png" ,
         material:"PLA",
-        size:"Small",
-        color:"Gold",
+        size:"10 inch",
+        color:"Premium Jet Black",
         stock:"Available"
     },
     {
