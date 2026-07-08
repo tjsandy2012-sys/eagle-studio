@@ -15,7 +15,7 @@ const products = [
         name: "Lord Murugan Idol", 
         price: 15, 
         description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
-        image: "images/1000110560.jpg"
+        image: "images/1000110560.jpg",
         material:"PLA",
         size:"9 Inch",
         color:"Premium Jet Black",
@@ -26,7 +26,7 @@ const products = [
         name: "Sri Venkateshwara Premium Statue", 
         price: 16, 
         description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
-        image: "images/1000110555.jpg" 
+        image: "images/1000110555.jpg",
         material:"PLA",
         size:"10 Inch",
         color:"Premium Jet Black",
@@ -37,7 +37,7 @@ const products = [
         name: "Lord Shiva(Mahadev) Bust", 
         price: 13, 
         description: "Perfect for car dashboards, home temples, office desks, and devotional gifts. Premium 3D printed with fine details.", 
-        image: "images/1000109572.png"
+        image: "images/1000109572.png",
         material:"PLA",
         size:"8 Inch",
         color:"Premium Jet Black",
