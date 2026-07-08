@@ -59,3 +59,21 @@ pre { white-space: pre-wrap; background: #f3f4f6; padding: 10px; border-radius: 
 .details-info {
   flex: 1;
 }
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: 8px;
+}
+
+.cart-row button {
+  background: #b91c1c;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
