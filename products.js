@@ -1,56 +1,67 @@
-const products = JSON.parse(localStorage.getItem("products") || "[]");
-const selectedProductId = Number(localStorage.getItem("selectedProductId"));
-
-const detailsDiv = document.getElementById("productDetails");
-
-if (!detailsDiv) {
-  console.error("productDetails div not found");
-} else {
-  const product = products.find(p => Number(p.id) === selectedProductId);
-
-  if (product) {
-    detailsDiv.innerHTML = `
-      <div class="details-card">
-        <img src="${product.image}" alt="${product.name}">
-        <div class="details-info">
-          <h1>${product.name}</h1>
-          <h2>$${product.price}</h2>
-          <p>${product.description}</p>
-          <p><strong>Material:</strong> ${product.material}</p>
-          <p><strong>Size:</strong> ${product.size}</p>
-          <p><strong>Color:</strong> ${product.color}</p>
-          <p><strong>Stock:</strong> ${product.stock}</p>
-          <button onclick="addToCartFromDetails()">Add to Cart</button>
-        </div>
-      </div>
-    `;
-  } else {
-    detailsDiv.innerHTML = `
-      <h2>Product not found</h2>
-      <p>Please go back to Products and select the product again.</p>
-      <a href="products.html">Back to Products</a>
-    `;
+const products = [
+  {
+    id: 1,
+    name: "Lord Balaji Premium Idol",
+    price: 11,
+    description: "Perfect for car dashboards, home temples, office desks, and devotional gifts.",
+    image: "images/1000109054.png",
+    material: "PLA",
+    size: "10 Inch",
+    color: "Premium Jet Black",
+    stock: "Available"
+  },
+  {
+    id: 2,
+    name: "Lord Murugan Idol",
+    price: 15,
+    description: "Perfect for car dashboards, home temples, office desks, and devotional gifts.",
+    image: "images/1000110560.jpg",
+    material: "PLA",
+    size: "9 Inch",
+    color: "Premium Jet Black",
+    stock: "Available"
+  },
+  {
+    id: 3,
+    name: "Sri Venkateshwara Premium Statue",
+    price: 16,
+    description: "Perfect for car dashboards, home temples, office desks, and devotional gifts.",
+    image: "images/1000110555.jpg",
+    material: "PLA",
+    size: "10 Inch",
+    color: "Premium Jet Black",
+    stock: "Available"
+  },
+  {
+    id: 4,
+    name: "Lord Shiva Mahadev Bust",
+    price: 13,
+    description: "Perfect for car dashboards, home temples, office desks, and devotional gifts.",
+    image: "images/1000109572.png",
+    material: "PLA",
+    size: "8 Inch",
+    color: "Premium Jet Black",
+    stock: "Available"
   }
-}
+];
 
-function addToCartFromDetails() {
-  const product = products.find(p => Number(p.id) === selectedProductId);
+localStorage.setItem("products", JSON.stringify(products));
 
-  if (!product) {
-    alert("Product not found.");
-    return;
-  }
+const productsList = document.getElementById("productsList");
 
-  if (!isLoggedIn()) {
-    alert("Please login before adding products to cart.");
-    window.location.href = "login.html";
-    return;
-  }
+productsList.innerHTML = products.map(product => `
+  <div class="product-card">
+      <img src="${product.image}" alt="${product.name}">
+      <h3>${product.name}</h3>
+      <p class="price">$${product.price}</p>
 
-  const cart = getCart();
-  cart.push(product);
-  saveCart(cart);
+      <button onclick="viewDetails(${product.id})">
+        View Details
+      </button>
+  </div>
+`).join("");
 
-  alert("Product added to cart.");
-  window.location.href = "cart.html";
+function viewDetails(id) {
+    localStorage.setItem("selectedProductId", id);
+    window.location.href = "product-details.html";
 }
