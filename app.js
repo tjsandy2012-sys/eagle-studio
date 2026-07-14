@@ -167,7 +167,7 @@ if (loginForm) {
 
     localStorage.setItem("loggedInUser", email);
 
-    alert("Login successful");
+    
     window.location.href = "products.html";
   });
 }
