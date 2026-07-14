@@ -611,3 +611,68 @@ pre {
     min-width: 600px;
   }
 }
+/* Add this section to the bottom of styles.css */
+
+.auth-page,
+.cart-page {
+  width: min(1000px, calc(100% - 30px));
+  margin: 35px auto;
+}
+
+.auth-card,
+.checkout-section {
+  max-width: 620px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+}
+
+.auth-card label,
+.checkout-section label {
+  display: block;
+  margin: 14px 0 6px;
+  font-weight: 700;
+}
+
+.auth-card input,
+.checkout-section input,
+.checkout-section textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.checkout-name-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.checkout-note {
+  color: #4b5563;
+}
+
+.cash-payment-message {
+  margin: 18px 0;
+  padding: 14px;
+  background: #fff7ed;
+  border-radius: 8px;
+}
+
+.error-message {
+  min-height: 20px;
+  color: #b91c1c;
+  font-weight: 700;
+}
+
+.welcome-user {
+  font-weight: 700;
+}
+
+@media (max-width: 650px) {
+  .checkout-name-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
