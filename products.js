@@ -42,7 +42,30 @@ const products = [
     size: "8 Inch",
     color: "Premium Jet Black",
     stock: "Available"
+  },
+    {
+    id: 5,
+    name: "Shiva lingam Idol(Shiva Ling)",
+    price: 12,
+    description: "Ideal for car dashboards, home temples, office desks, return gifts, and devotional gifting.",
+    image: "images/ganesha.jpg",
+    material: "PLA",
+    size: "4 Inch",
+    color: "Premium Jet Black",
+    stock: "Available"
+  },
+  {
+    id: 6,
+    name: "Ganesha Decorative Idol",
+    price: 1,
+    description: "Ganesha Moon Lamp - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
+    image: "images/krishna.jpg",
+    material: "PLA",
+    size: "4 Inch",
+    color: "Premium White",
+    stock: "Available"
   }
+];
 ];
 
 localStorage.setItem("products", JSON.stringify(products));
