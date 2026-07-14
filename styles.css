@@ -854,4 +854,22 @@ pre {
     min-width: 600px;
   }
 }
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:28px;
+    font-weight:700;
+    color:#d4af37;
+}
 
+.brand-logo{
+    width:42px;
+    height:42px;
+    object-fit:contain;
+    border-radius:50%;
+}
+
+.brand span{
+    color:#d4af37;
+}
