@@ -76,22 +76,68 @@ function saveCart(cart) {
 
 function updateHeader() {
   const nav = document.querySelector("header nav");
-  if (!nav) return;
+
+  if (!nav) {
+    return;
+  }
 
   const user = getLoggedInUser();
 
   if (user) {
     nav.innerHTML = `
       <a href="index.html">Home</a>
-      <a href="products.html">Products</a>
-      <a href="cart.html">Cart</a>
-      <span class="welcome-user">Welcome, ${escapeHtml(user.firstName || "Customer")}</span>
-      <a href="#" onclick="logoutUser(); return false;">Sign Out</a>
-      <a href="admin.html">Admin</a>
+
+      <a href="products.html">
+        Products
+      </a>
+
+      <a href="cart.html">
+        Cart
+      </a>
+
+      <a href="my-orders.html">
+        My Orders
+      </a>
+
+      <span class="welcome-user">
+        Welcome, ${escapeHtml(
+          user.firstName || "Customer"
+        )}
+      </span>
+
+      <a
+        href="#"
+        onclick="logoutUser(); return false;"
+      >
+        Sign Out
+      </a>
+
+      <a href="admin.html">
+        Admin
+      </a>
+    `;
+  } else {
+    nav.innerHTML = `
+      <a href="index.html">Home</a>
+
+      <a href="products.html">
+        Products
+      </a>
+
+      <a href="cart.html">
+        Cart
+      </a>
+
+      <a href="login.html">
+        Login
+      </a>
+
+      <a href="admin.html">
+        Admin
+      </a>
     `;
   }
 }
-
 function logoutUser() {
   localStorage.removeItem("loggedInUser");
   window.location.href = "login.html";
