@@ -589,6 +589,62 @@ async function loadAdminOrders() {
     `;
   }
 }
+const adminLoginForm = document.getElementById("adminLoginForm");
+
+if (adminLoginForm) {
+  adminLoginForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const passwordInput =
+      document.getElementById("adminPassword");
+
+    const errorElement =
+      document.getElementById("adminLoginError");
+
+    if (!passwordInput) {
+      return;
+    }
+
+    const enteredPassword = passwordInput.value;
+
+    if (enteredPassword !== ADMIN_PASSWORD) {
+      if (errorElement) {
+        errorElement.textContent =
+          "Incorrect admin password.";
+      }
+
+      passwordInput.value = "";
+      passwordInput.focus();
+
+      return;
+    }
+
+    if (errorElement) {
+      errorElement.textContent = "";
+    }
+
+    /*
+      sessionStorage is cleared when the browser tab is closed.
+      It is safer than keeping the admin login permanently.
+    */
+    sessionStorage.setItem("eagleStudioAdmin", "true");
+
+    passwordInput.value = "";
+
+    showAdminDashboard();
+
+    await loadAdminOrders();
+  });
+}
+
+if (document.getElementById("adminDashboard")) {
+  if (getAdminLoginStatus()) {
+    showAdminDashboard();
+    loadAdminOrders();
+  } else {
+    showAdminLogin();
+  }
+}
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
