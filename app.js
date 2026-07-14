@@ -31,7 +31,7 @@ function updateHeader() {
 
 function logoutUser() {
   localStorage.removeItem("loggedInUser");
-  alert("Signed out successfully");
+
   window.location.href = "login.html";
 }
 
