@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>My Orders | Eagle Studio</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+<header class="header">
+  <div class="brand">🦅 Eagle Studio</div>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="my-orders.html">My Orders</a>
+    <a href="login.html">Login</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+</header>
+
+<main class="my-orders-page">
+
+  <div class="my-orders-heading">
+    <div>
+      <h1>My Orders</h1>
+
+      <p>
+        View your individual Eagle Studio order history.
+      </p>
+    </div>
+
+    <a
+      href="products.html"
+      class="continue-shopping-button"
+    >
+      Continue Shopping
+    </a>
+  </div>
+
+  <div id="myOrders">
+    <p>Loading your orders...</p>
+  </div>
+
+</main>
+
+<script src="supabase-config.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
