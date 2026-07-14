@@ -66,7 +66,6 @@ const products = [
     stock: "Available"
   }
 ];
-];
 
 localStorage.setItem("products", JSON.stringify(products));
 
