@@ -248,39 +248,347 @@ if (orderForm) {
   });
 }
 
-async function loadAdminOrders() {
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function getAdminLoginStatus() {
+  return sessionStorage.getItem("eagleStudioAdmin") === "true";
+}
+
+function showAdminDashboard() {
+  const loginSection = document.getElementById("adminLoginSection");
+  const dashboard = document.getElementById("adminDashboard");
+
+  if (loginSection) {
+    loginSection.classList.add("hidden");
+  }
+
+  if (dashboard) {
+    dashboard.classList.remove("hidden");
+  }
+}
+
+function showAdminLogin() {
+  const loginSection = document.getElementById("adminLoginSection");
+  const dashboard = document.getElementById("adminDashboard");
+
+  if (loginSection) {
+    loginSection.classList.remove("hidden");
+  }
+
+  if (dashboard) {
+    dashboard.classList.add("hidden");
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem("eagleStudioAdmin");
+
+  showAdminLogin();
+
   const passwordInput = document.getElementById("adminPassword");
+
+  if (passwordInput) {
+    passwordInput.value = "";
+  }
+
   const adminOrders = document.getElementById("adminOrders");
 
-  if (!passwordInput || !adminOrders) return;
+  if (adminOrders) {
+    adminOrders.innerHTML = "";
+  }
+}
 
-  if (passwordInput.value !== ADMIN_PASSWORD) {
-    alert("Wrong admin password.");
+function normalizeOrderItems(items) {
+  if (Array.isArray(items)) {
+    return items;
+  }
+
+  if (typeof items === "string") {
+    try {
+      const parsedItems = JSON.parse(items);
+      return Array.isArray(parsedItems) ? parsedItems : [];
+    } catch (error) {
+      console.error("Unable to read order items:", error);
+      return [];
+    }
+  }
+
+  return [];
+}
+
+function createCustomerId(order) {
+  /*
+    Use the Supabase order ID as the unique customer/order reference.
+
+    Examples:
+    ES-000012
+    ES-A31F67D2
+  */
+
+  if (order.id === undefined || order.id === null) {
+    return "ES-NOT-AVAILABLE";
+  }
+
+  const rawId = String(order.id);
+
+  if (/^\d+$/.test(rawId)) {
+    return `ES-${rawId.padStart(6, "0")}`;
+  }
+
+  return `ES-${rawId.substring(0, 8).toUpperCase()}`;
+}
+
+function formatOrderDate(createdAt) {
+  if (!createdAt) {
+    return "Date not available";
+  }
+
+  const date = new Date(createdAt);
+
+  if (Number.isNaN(date.getTime())) {
+    return escapeHtml(createdAt);
+  }
+
+  return date.toLocaleString();
+}
+
+function renderOrderProducts(items) {
+  const normalizedItems = normalizeOrderItems(items);
+
+  if (normalizedItems.length === 0) {
+    return `
+      <tr>
+        <td colspan="5">No product information available.</td>
+      </tr>
+    `;
+  }
+
+  return normalizedItems
+    .map((item) => {
+      const productName =
+        item.name ||
+        item.product_name ||
+        item.title ||
+        "Product";
+
+      const quantity = Math.max(
+        1,
+        Number(item.quantity) || 1
+      );
+
+      const unitPrice = Number(item.price) || 0;
+      const itemTotal = unitPrice * quantity;
+
+      return `
+        <tr>
+          <td>${escapeHtml(productName)}</td>
+          <td>${quantity}</td>
+          <td>$${unitPrice.toFixed(2)}</td>
+          <td>$${itemTotal.toFixed(2)}</td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+async function loadAdminOrders() {
+  const adminOrders = document.getElementById("adminOrders");
+
+  if (!adminOrders) {
     return;
   }
+
+  if (!getAdminLoginStatus()) {
+    showAdminLogin();
+    return;
+  }
+
+  showAdminDashboard();
+
+  adminOrders.innerHTML = `
+    <div class="admin-loading">
+      Loading customer orders...
+    </div>
+  `;
 
   try {
     const orders = await supabaseRequest(
       "orders?select=*&order=created_at.desc"
     );
 
-    adminOrders.innerHTML = orders.map((order) => `
-      <div class="order-card">
-        <h3>
-          ${order.customer_name} -
-          $${Number(order.total_amount).toFixed(2)}
-        </h3>
-        <p>${order.phone} | ${order.email}</p>
-        <p>${order.delivery_address}</p>
-        <pre>${JSON.stringify(order.items, null, 2)}</pre>
-        <p>${order.notes || ""}</p>
-      </div>
-    `).join("");
+    if (!Array.isArray(orders) || orders.length === 0) {
+      adminOrders.innerHTML = `
+        <div class="no-orders">
+          <h2>No orders received</h2>
+          <p>New customer orders will appear here.</p>
+        </div>
+      `;
+
+      return;
+    }
+
+    adminOrders.innerHTML = orders
+      .map((order) => {
+        const items = normalizeOrderItems(order.items);
+
+        const calculatedTotal = items.reduce((sum, item) => {
+          const price = Number(item.price) || 0;
+          const quantity = Math.max(
+            1,
+            Number(item.quantity) || 1
+          );
+
+          return sum + price * quantity;
+        }, 0);
+
+        const savedTotal = Number(order.total_amount);
+
+        const orderTotal = Number.isFinite(savedTotal)
+          ? savedTotal
+          : calculatedTotal;
+
+        return `
+          <article class="admin-order-card">
+
+            <div class="order-title-row">
+              <div>
+                <h2>
+                  Order ${escapeHtml(createCustomerId(order))}
+                </h2>
+
+                <p class="order-date">
+                  ${formatOrderDate(order.created_at)}
+                </p>
+              </div>
+
+              <div class="order-total-badge">
+                $${orderTotal.toFixed(2)}
+              </div>
+            </div>
+
+            <div class="customer-information">
+
+              <div class="customer-field">
+                <span class="customer-field-label">
+                  Customer Name
+                </span>
+
+                <span>
+                  ${escapeHtml(order.customer_name || "Not provided")}
+                </span>
+              </div>
+
+              <div class="customer-field">
+                <span class="customer-field-label">
+                  Customer ID
+                </span>
+
+                <span>
+                  ${escapeHtml(createCustomerId(order))}
+                </span>
+              </div>
+
+              <div class="customer-field">
+                <span class="customer-field-label">
+                  Phone Number
+                </span>
+
+                <span>
+                  ${escapeHtml(order.phone || "Not provided")}
+                </span>
+              </div>
+
+              <div class="customer-field">
+                <span class="customer-field-label">
+                  Email
+                </span>
+
+                <span>
+                  ${escapeHtml(order.email || "Not provided")}
+                </span>
+              </div>
+
+              <div class="customer-field customer-address">
+                <span class="customer-field-label">
+                  Customer Address
+                </span>
+
+                <span>
+                  ${escapeHtml(
+                    order.delivery_address || "Not provided"
+                  )}
+                </span>
+              </div>
+
+            </div>
+
+            <h3>Products Ordered</h3>
+
+            <div class="order-table-wrapper">
+              <table class="order-products-table">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Product Total</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  ${renderOrderProducts(order.items)}
+                </tbody>
+
+                <tfoot>
+                  <tr>
+                    <th colspan="3">Order Total</th>
+                    <th>$${orderTotal.toFixed(2)}</th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            ${
+              order.notes
+                ? `
+                  <div class="order-notes">
+                    <strong>Customer Notes:</strong>
+                    ${escapeHtml(order.notes)}
+                  </div>
+                `
+                : ""
+            }
+
+            <div class="payment-status">
+              <strong>Payment:</strong>
+              ${escapeHtml(
+                order.payment_status ||
+                "Cash only - pending collection"
+              )}
+            </div>
+
+          </article>
+        `;
+      })
+      .join("");
   } catch (error) {
-    adminOrders.innerHTML = `<p class="error">${error.message}</p>`;
+    console.error("Unable to load admin orders:", error);
+
+    adminOrders.innerHTML = `
+      <div class="admin-error">
+        <h2>Unable to load orders</h2>
+        <p>${escapeHtml(error.message)}</p>
+      </div>
+    `;
   }
 }
-
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
