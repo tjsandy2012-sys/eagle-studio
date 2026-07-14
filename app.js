@@ -1082,3 +1082,4 @@ async function loadMyOrders() {
 updateHeader();
 renderCart();
 populateCheckoutCustomerDetails();
+loadMyOrders();
