@@ -1,22 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Cart | Eagle Studio</title><link rel="stylesheet" href="styles.css" /></head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart | Eagle Studio</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
 <body>
-<header class="header"><div class="brand">🦅 Eagle Studio</div><nav><a href="index.html">Home</a><a href="products.html">Products</a><a href="cart.html">Cart</a><a href="login.html">Login</a><a href="admin.html">Admin</a></nav></header>
-<main class="container">
+<header class="header">
+  <div class="brand">🦅 Eagle Studio</div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="login.html">Login</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+</header>
+
+<main class="cart-page">
   <h1>Your Cart</h1>
   <div id="cartItems"></div>
-  <h2>Checkout</h2>
-  <p class="notice">Cash only. Payment will be collected separately.</p>
-  <form id="orderForm">
-    <input required id="customerName" placeholder="Customer name" />
-    <input required id="phone" placeholder="Phone number" />
-    <input required id="email" type="email" placeholder="Email" />
-    <textarea required id="address" placeholder="Delivery address"></textarea>
-    <textarea id="notes" placeholder="Notes/customization request"></textarea>
-    <button type="submit">Place Order</button>
-  </form>
+
+  <section class="checkout-section">
+    <h2>Customer and Delivery Information</h2>
+    <p class="checkout-note">Your account information is filled automatically.</p>
+
+    <form id="orderForm">
+      <div class="checkout-name-grid">
+        <div>
+          <label for="checkoutFirstName">First Name</label>
+          <input type="text" id="checkoutFirstName" autocomplete="given-name" required />
+        </div>
+        <div>
+          <label for="checkoutLastName">Last Name</label>
+          <input type="text" id="checkoutLastName" autocomplete="family-name" required />
+        </div>
+      </div>
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" autocomplete="tel" required />
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" autocomplete="email" required />
+
+      <label for="address">Delivery Address</label>
+      <textarea id="address" autocomplete="street-address" required></textarea>
+
+      <label for="notes">Order Notes <span class="optional-text">(Optional)</span></label>
+      <textarea id="notes"></textarea>
+
+      <div class="cash-payment-message">
+        <strong>Cash only.</strong> Payment will be collected separately.
+      </div>
+
+      <button type="submit">Place Order</button>
+    </form>
+  </section>
 </main>
+
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
 </body>
