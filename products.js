@@ -57,7 +57,7 @@ const products = [
   {
     id: 6,
     name: "Ganesha Decorative Idol",
-    price: 1,
+    price: 5,
     description: "Ganesha Moon Lamp - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
     image: "images/Ganesha2.png",
     material: "PLA",
