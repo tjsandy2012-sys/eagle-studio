@@ -64,6 +64,17 @@ const products = [
     size: "4 Inch",
     color: "Premium White",
     stock: "Available"
+  },
+  {
+    id: 7,
+    name: "Lord Shiva Mahadev",
+    price: 15,
+    description: "Lord Shiva Mahadev - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
+    image: "images/Shivafullsize1.png",
+    material: "PLA",
+    size: "10 Inch",
+    color: "Premium Black",
+    stock: "Available"
   }
 ];
 
