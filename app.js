@@ -403,7 +403,224 @@ if (orderForm) {
     }
   });
 }
+function getAdminLoginStatus() {
+  return sessionStorage.getItem("eagleStudioAdmin") === "true";
+}
 
+function showAdminDashboard() {
+  const loginSection = document.getElementById("adminLoginSection");
+  const dashboard = document.getElementById("adminDashboard");
+
+  if (loginSection) {
+    loginSection.classList.add("hidden");
+  }
+
+  if (dashboard) {
+    dashboard.classList.remove("hidden");
+  }
+}
+
+function showAdminLogin() {
+  const loginSection = document.getElementById("adminLoginSection");
+  const dashboard = document.getElementById("adminDashboard");
+
+  if (loginSection) {
+    loginSection.classList.remove("hidden");
+  }
+
+  if (dashboard) {
+    dashboard.classList.add("hidden");
+  }
+}
+
+function adminLogout() {
+  sessionStorage.removeItem("eagleStudioAdmin");
+  showAdminLogin();
+
+  const passwordInput = document.getElementById("adminPassword");
+
+  if (passwordInput) {
+    passwordInput.value = "";
+  }
+}
+
+function normalizeOrderItems(items) {
+  if (Array.isArray(items)) {
+    return items;
+  }
+
+  if (typeof items === "string") {
+    try {
+      const parsedItems = JSON.parse(items);
+      return Array.isArray(parsedItems) ? parsedItems : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  return [];
+}
+
+async function loadAdminOrders() {
+  const adminOrders = document.getElementById("adminOrders");
+
+  if (!adminOrders) {
+    return;
+  }
+
+  if (!getAdminLoginStatus()) {
+    showAdminLogin();
+    return;
+  }
+
+  showAdminDashboard();
+  adminOrders.innerHTML = "<p>Loading orders...</p>";
+
+  try {
+    const orders = await supabaseRequest(
+      "orders?select=*&order=created_at.desc"
+    );
+
+    if (!Array.isArray(orders) || orders.length === 0) {
+      adminOrders.innerHTML = "<p>No orders received yet.</p>";
+      return;
+    }
+
+    adminOrders.innerHTML = orders.map((order) => {
+      const items = normalizeOrderItems(order.items);
+
+      const productRows = items.length
+        ? items.map((item) => {
+            const quantity = Number(item.quantity) || 1;
+            const price = Number(item.price) || 0;
+
+            return `
+              <tr>
+                <td>${escapeHtml(item.name || "Product")}</td>
+                <td>${quantity}</td>
+                <td>$${price.toFixed(2)}</td>
+                <td>$${(price * quantity).toFixed(2)}</td>
+              </tr>
+            `;
+          }).join("")
+        : `
+            <tr>
+              <td colspan="4">No product details available</td>
+            </tr>
+          `;
+
+      return `
+        <article class="admin-order-card">
+          <h2>
+            ${escapeHtml(order.customer_name || "Customer")}
+          </h2>
+
+          <p>
+            <strong>Customer ID:</strong>
+            ${escapeHtml(order.customer_id || order.id || "Not available")}
+          </p>
+
+          <p>
+            <strong>Phone:</strong>
+            ${escapeHtml(order.phone || "Not provided")}
+          </p>
+
+          <p>
+            <strong>Email:</strong>
+            ${escapeHtml(order.email || "Not provided")}
+          </p>
+
+          <p>
+            <strong>Address:</strong>
+            ${escapeHtml(order.delivery_address || "Not provided")}
+          </p>
+
+          <table class="order-products-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              ${productRows}
+            </tbody>
+          </table>
+
+          <h3>
+            Order Total:
+            $${Number(order.total_amount || 0).toFixed(2)}
+          </h3>
+        </article>
+      `;
+    }).join("");
+  } catch (error) {
+    adminOrders.innerHTML = `
+      <p class="error-message">
+        Unable to load orders: ${escapeHtml(error.message)}
+      </p>
+    `;
+  }
+}
+
+const adminLoginForm =
+  document.getElementById("adminLoginForm");
+
+if (adminLoginForm) {
+  adminLoginForm.addEventListener(
+    "submit",
+    async function (event) {
+      event.preventDefault();
+
+      const passwordInput =
+        document.getElementById("adminPassword");
+
+      const errorElement =
+        document.getElementById("adminLoginError");
+
+      if (!passwordInput) {
+        return;
+      }
+
+      if (passwordInput.value.trim() !== ADMIN_PASSWORD) {
+        if (errorElement) {
+          errorElement.textContent =
+            "Incorrect admin password.";
+        }
+
+        passwordInput.value = "";
+        passwordInput.focus();
+        return;
+      }
+
+      if (errorElement) {
+        errorElement.textContent = "";
+      }
+
+      sessionStorage.setItem(
+        "eagleStudioAdmin",
+        "true"
+      );
+
+      passwordInput.value = "";
+
+      showAdminDashboard();
+      await loadAdminOrders();
+    }
+  );
+}
+
+if (document.getElementById("adminDashboard")) {
+  if (getAdminLoginStatus()) {
+    showAdminDashboard();
+    loadAdminOrders();
+  } else {
+    showAdminLogin();
+  }
+}
 updateHeader();
 renderCart();
 populateCheckoutCustomerDetails();
