@@ -667,6 +667,418 @@ if (document.getElementById("adminDashboard")) {
     showAdminLogin();
   }
 }
+function normalizeCustomerOrderItems(items) {
+  if (Array.isArray(items)) {
+    return items;
+  }
+
+  if (typeof items === "string") {
+    try {
+      const parsedItems = JSON.parse(items);
+
+      return Array.isArray(parsedItems)
+        ? parsedItems
+        : [];
+    } catch (error) {
+      console.error(
+        "Unable to read order products:",
+        error
+      );
+
+      return [];
+    }
+  }
+
+  return [];
+}
+
+function formatCustomerOrderDate(createdAt) {
+  if (!createdAt) {
+    return "Order date unavailable";
+  }
+
+  const orderDate = new Date(createdAt);
+
+  if (Number.isNaN(orderDate.getTime())) {
+    return escapeHtml(createdAt);
+  }
+
+  return orderDate.toLocaleString(
+    "en-US",
+    {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit"
+    }
+  );
+}
+
+function createOrderReference(order) {
+  if (
+    order.id === undefined ||
+    order.id === null
+  ) {
+    return "ES-ORDER";
+  }
+
+  const orderId = String(order.id);
+
+  if (/^\d+$/.test(orderId)) {
+    return `ES-${orderId.padStart(6, "0")}`;
+  }
+
+  return `ES-${orderId
+    .substring(0, 8)
+    .toUpperCase()}`;
+}
+
+function renderCustomerOrderProducts(items) {
+  const products =
+    normalizeCustomerOrderItems(items);
+
+  if (products.length === 0) {
+    return `
+      <tr>
+        <td colspan="4">
+          Product information is unavailable.
+        </td>
+      </tr>
+    `;
+  }
+
+  return products
+    .map((item) => {
+      const productName =
+        item.name ||
+        item.product_name ||
+        item.title ||
+        "Product";
+
+      const quantity = Math.max(
+        1,
+        Number(item.quantity) || 1
+      );
+
+      const unitPrice =
+        Number(item.price) || 0;
+
+      const productTotal =
+        unitPrice * quantity;
+
+      return `
+        <tr>
+          <td>
+            ${escapeHtml(productName)}
+          </td>
+
+          <td>
+            ${quantity}
+          </td>
+
+          <td>
+            $${unitPrice.toFixed(2)}
+          </td>
+
+          <td>
+            $${productTotal.toFixed(2)}
+          </td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+async function loadMyOrders() {
+  const myOrdersContainer =
+    document.getElementById("myOrders");
+
+  if (!myOrdersContainer) {
+    return;
+  }
+
+  const user = getLoggedInUser();
+
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  if (!user.customerId) {
+    myOrdersContainer.innerHTML = `
+      <div class="my-orders-message">
+        <h2>Account update required</h2>
+
+        <p>
+          Please sign out and create a new account
+          so your orders can be connected to your
+          customer profile.
+        </p>
+
+        <a
+          href="register.html"
+          class="button"
+        >
+          Create Account
+        </a>
+      </div>
+    `;
+
+    return;
+  }
+
+  myOrdersContainer.innerHTML = `
+    <div class="my-orders-loading">
+      Loading your orders...
+    </div>
+  `;
+
+  try {
+    const encodedCustomerId =
+      encodeURIComponent(user.customerId);
+
+    const orders = await supabaseRequest(
+      `orders?select=*&customer_id=eq.${encodedCustomerId}&order=created_at.desc`
+    );
+
+    if (
+      !Array.isArray(orders) ||
+      orders.length === 0
+    ) {
+      myOrdersContainer.innerHTML = `
+        <div class="my-orders-message">
+          <h2>No orders yet</h2>
+
+          <p>
+            Your completed orders will appear here.
+          </p>
+
+          <a
+            href="products.html"
+            class="button"
+          >
+            Browse Products
+          </a>
+        </div>
+      `;
+
+      return;
+    }
+
+    myOrdersContainer.innerHTML =
+      orders
+        .map((order) => {
+          const products =
+            normalizeCustomerOrderItems(
+              order.items
+            );
+
+          const calculatedTotal =
+            products.reduce(
+              (total, item) => {
+                const price =
+                  Number(item.price) || 0;
+
+                const quantity =
+                  Math.max(
+                    1,
+                    Number(item.quantity) || 1
+                  );
+
+                return (
+                  total +
+                  price * quantity
+                );
+              },
+              0
+            );
+
+          const savedTotal =
+            Number(order.total_amount);
+
+          const orderTotal =
+            Number.isFinite(savedTotal)
+              ? savedTotal
+              : calculatedTotal;
+
+          return `
+            <article class="customer-order-card">
+
+              <div class="customer-order-header">
+
+                <div>
+                  <h2>
+                    Order
+                    ${escapeHtml(
+                      createOrderReference(order)
+                    )}
+                  </h2>
+
+                  <p class="customer-order-date">
+                    ${formatCustomerOrderDate(
+                      order.created_at
+                    )}
+                  </p>
+                </div>
+
+                <div class="customer-order-total">
+                  $${orderTotal.toFixed(2)}
+                </div>
+
+              </div>
+
+              <div class="customer-order-summary">
+
+                <div>
+                  <span class="order-summary-label">
+                    Customer
+                  </span>
+
+                  <span>
+                    ${escapeHtml(
+                      order.customer_name ||
+                      `${user.firstName || ""} ${
+                        user.lastName || ""
+                      }`.trim() ||
+                      "Customer"
+                    )}
+                  </span>
+                </div>
+
+                <div>
+                  <span class="order-summary-label">
+                    Phone
+                  </span>
+
+                  <span>
+                    ${escapeHtml(
+                      order.phone ||
+                      user.phone ||
+                      "Not provided"
+                    )}
+                  </span>
+                </div>
+
+                <div>
+                  <span class="order-summary-label">
+                    Email
+                  </span>
+
+                  <span>
+                    ${escapeHtml(
+                      order.email ||
+                      user.email ||
+                      "Not provided"
+                    )}
+                  </span>
+                </div>
+
+                <div>
+                  <span class="order-summary-label">
+                    Payment
+                  </span>
+
+                  <span>
+                    ${escapeHtml(
+                      order.payment_status ||
+                      "Cash only - pending collection"
+                    )}
+                  </span>
+                </div>
+
+                <div class="order-delivery-address">
+                  <span class="order-summary-label">
+                    Delivery Address
+                  </span>
+
+                  <span>
+                    ${escapeHtml(
+                      order.delivery_address ||
+                      "Not provided"
+                    )}
+                  </span>
+                </div>
+
+              </div>
+
+              <h3>Products</h3>
+
+              <div class="customer-order-table-wrapper">
+
+                <table class="customer-order-table">
+
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Unit Price</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    ${renderCustomerOrderProducts(
+                      order.items
+                    )}
+                  </tbody>
+
+                  <tfoot>
+                    <tr>
+                      <th colspan="3">
+                        Order Total
+                      </th>
+
+                      <th>
+                        $${orderTotal.toFixed(2)}
+                      </th>
+                    </tr>
+                  </tfoot>
+
+                </table>
+
+              </div>
+
+              ${
+                order.notes
+                  ? `
+                    <div class="customer-order-notes">
+                      <strong>
+                        Order Notes:
+                      </strong>
+
+                      ${escapeHtml(order.notes)}
+                    </div>
+                  `
+                  : ""
+              }
+
+            </article>
+          `;
+        })
+        .join("");
+
+  } catch (error) {
+    console.error(
+      "Unable to load customer orders:",
+      error
+    );
+
+    myOrdersContainer.innerHTML = `
+      <div class="my-orders-error">
+
+        <h2>
+          Unable to load your orders
+        </h2>
+
+        <p>
+          ${escapeHtml(error.message)}
+        </p>
+
+      </div>
+    `;
+  }
+}
 updateHeader();
 renderCart();
 populateCheckoutCustomerDetails();
