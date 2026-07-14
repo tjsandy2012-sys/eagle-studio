@@ -873,3 +873,26 @@ pre {
 .brand span{
     color:#d4af37;
 }
+.contact-info{
+    text-align:center;
+    margin-top:20px;
+}
+
+.whatsapp-link{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    color:#25D366;
+    font-size:18px;
+    font-weight:600;
+    text-decoration:none;
+}
+
+.whatsapp-link:hover{
+    color:#1DA851;
+}
+
+.whatsapp-icon{
+    width:28px;
+    height:28px;
+}
