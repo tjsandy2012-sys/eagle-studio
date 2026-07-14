@@ -401,22 +401,28 @@ if (orderForm) {
     }
 
     const order = {
-      customer_id: user.customerId,
-      first_name: firstName,
-      last_name: lastName,
-      customer_name: `${firstName} ${lastName}`,
-      phone,
-      email,
-      delivery_address: address,
-      notes,
-      items: cart,
-      total_amount: cart.reduce(
-        (sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 1),
-        0
-      ),
-      payment_status: "Cash only - pending collection"
-    };
+    customer_id: user.customerId,
 
+    first_name: user.firstName,
+
+    last_name: user.lastName,
+
+    customer_name: `${user.firstName} ${user.lastName}`,
+
+    phone: user.phone,
+
+    email: user.email,
+
+    delivery_address: address,
+
+    notes: notes,
+
+    items: cart,
+
+    total_amount: total,
+
+    payment_status: "Cash only - pending collection"
+};
     try {
       await supabaseRequest("orders", "POST", order);
 
