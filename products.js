@@ -11,17 +11,6 @@ const products = [
     stock: "Available"
   },
   {
-    id: 2,
-    name: "Lord Murugan Idol",
-    price: 15,
-    description: "Perfect for car dashboards, home temples, office desks, and devotional gifts.",
-    image: "images/1000110560.jpg",
-    material: "PLA",
-    size: "9 Inch",
-    color: "Premium Jet Black",
-    stock: "Available"
-  },
-  {
     id: 3,
     name: "Sri Venkateshwara Premium Statue",
     price: 16,
