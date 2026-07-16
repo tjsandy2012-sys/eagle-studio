@@ -77,7 +77,7 @@ const products = [
     stock: "Available"
   },
   {
-    id: 7,
+    id: 8,
     name: "Jesus Christ Statue",
     price: 5,
     description: "Jesus Christ Statue - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
@@ -88,7 +88,7 @@ const products = [
     stock: "Available"
   },
     {
-    id: 8,
+    id: 9,
     name: "Jesus Christ Idol",
     price: 5,
     description: "Jesus Christ Moon Lamp - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
