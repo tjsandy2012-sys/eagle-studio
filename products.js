@@ -97,6 +97,17 @@ const products = [
     size: "3 Inch",
     color: "Premium White",
     stock: "Available"
+  },
+  {
+    id: 10,
+    name: "Gopuram Kumkum Chivil(Kumkuma holder)",
+    price: 6,
+    description: "Gopuram Kumkum Chivil(Kumkuma holder) - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
+    image: "images/gopuram1.jpeg",
+    material: "PLA",
+    size: "3 Inch",
+    color: "Premium White",
+    stock: "Available"
   }
 ];
 
