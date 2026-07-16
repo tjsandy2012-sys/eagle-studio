@@ -400,18 +400,24 @@ if (orderForm) {
       return;
     }
 
+    const total = cart.reduce((sum, item) => {
+      const price = Number(item.price) || 0;
+      const quantity = Math.max(1, Number(item.quantity) || 1);
+      return sum + price * quantity;
+    }, 0);
+
     const order = {
     customer_id: user.customerId,
 
-    first_name: user.firstName,
+    first_name: firstName,
 
-    last_name: user.lastName,
+    last_name: lastName,
 
-    customer_name: `${user.firstName} ${user.lastName}`,
+    customer_name: `${firstName} ${lastName}`.trim(),
 
-    phone: user.phone,
+    phone: phone,
 
-    email: user.email,
+    email: email,
 
     delivery_address: address,
 
@@ -419,7 +425,7 @@ if (orderForm) {
 
     items: cart,
 
-    total_amount: total,
+    total_amount: Number(total.toFixed(2)),
 
     payment_status: "Cash only - pending collection"
 };
