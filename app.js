@@ -454,7 +454,7 @@ if (orderForm) {
       });
 
       localStorage.removeItem("cart");
-      alert("Order placed successfully. Cash only. Payment will be collected separately.");
+      alert("Order placed successfully. Payment will be collected during the delivery. Thank you!!");
       window.location.href = "products.html";
     } catch (error) {
       alert("Order failed: " + error.message);
