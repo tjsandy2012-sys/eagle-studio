@@ -26,7 +26,7 @@ const products = [
     name: "Sri Venkateshwara Premium Statue",
     price: 16,
     description: "Perfect for car dashboards, home temples, office desks, and devotional gifts.",
-    image: "images/1000110555.jpg",
+    image: "images/Venkateshwarafull1.jpeg",
     material: "PLA",
     size: "10 Inch",
     color: "Premium Jet Black",
@@ -74,6 +74,28 @@ const products = [
     material: "PLA",
     size: "10 Inch",
     color: "Premium Black",
+    stock: "Available"
+  },
+  {
+    id: 7,
+    name: "Jesus Christ Statue",
+    price: 5,
+    description: "Jesus Christ Statue - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
+    image: "images/jesusplus1.jpeg",
+    material: "PLA",
+    size: "3 Inch",
+    color: "Premium White",
+    stock: "Available"
+  },
+    {
+    id: 8,
+    name: "Jesus Christ Idol",
+    price: 5,
+    description: "Jesus Christ Moon Lamp - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
+    image: "images/jesuslatern1.jpeg",
+    material: "PLA",
+    size: "3 Inch",
+    color: "Premium White",
     stock: "Available"
   }
 ];
