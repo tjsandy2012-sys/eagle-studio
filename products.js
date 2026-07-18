@@ -1,4 +1,15 @@
 const products = [
+{
+    id: 10,
+    name: "Gopuram Kumkum Chivil(Kumkuma holder)",
+    price: 6,
+    description: "Gopuram Kumkum Chivil(Kumkuma holder) - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
+    image: "images/gopuram1.jpeg",
+    material: "PLA",
+    size: "4 Inch",
+    color: "Premium Gold",
+    stock: "Available"
+  },
   {
     id: 1,
     name: "Lord Balaji Premium Idol",
@@ -88,16 +99,39 @@ const products = [
     stock: "Available"
   },
   {
-    id: 10,
-    name: "Gopuram Kumkum Chivil(Kumkuma holder)",
+    id: 11,
+    name: "Murugan Vel Kumkum holder",
     price: 6,
-    description: "Gopuram Kumkum Chivil(Kumkuma holder) - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
-    image: "images/gopuram1.jpeg",
+    description: "Murugan Vel Kumkum holder - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
+    image: "images/velkumkumholder.jpeg",
     material: "PLA",
-    size: "4 Inch",
+    size: "3 Inch",
     color: "Premium Gold",
     stock: "Available"
+  },
+  {
+    id: 12,
+    name: "Ivory Ganesha Blessing Idol",
+    price: 6,
+    description: "Ivory Ganesha Blessing Idol - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
+    image: "images/ganeshawhitecardash.jpeg",
+    material: "PLA",
+    size: "3 Inch",
+    color: "Premium White",
+    stock: "Available"
+  },
+  {
+    id: 13,
+    name: "Little Shiva Idol",
+    price: 6,
+    description: "Little Shiva Idol - A beautiful decorative idol suitable for home décor, devotional spaces, and gifting.",
+    image: "images/Babyshiva.jpeg",
+    material: "PLA",
+    size: "3 Inch",
+    color: "Premium White",
+    stock: "Available"
   }
+  
 ];
 
 localStorage.setItem("products", JSON.stringify(products));
